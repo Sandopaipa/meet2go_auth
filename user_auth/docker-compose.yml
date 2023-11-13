@@ -1,0 +1,28 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:15
+    volumes:
+      - data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1111
+      - POSTGRES_DB=meet2go_users
+  web:
+    container_name: meet2go_auth
+    build: .
+    command:
+              python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/meet2go_auth
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+    env_file:
+      - ./.env
+volumes:
+  data:

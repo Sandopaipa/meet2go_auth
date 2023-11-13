@@ -30,4 +30,8 @@ class LoginUserView(APIView):
     def post(self, request):
         serializer = UserLoginSerializer(data=request.data, context={"request": request})
         serializer.is_valid(raise_exception=True)
-        return Response(serializer.data, status=HTTP_200_OK)
+        response = Response(serializer.data, status=HTTP_200_OK)
+        response.set_cookie('access_token', serializer.data.get('access_token'))
+        response.set_cookie('refresh_token', serializer.data.get('refresh_token'))
+
+        return response
